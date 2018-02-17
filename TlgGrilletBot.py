@@ -6,14 +6,14 @@ from chatterbot.trainers import ListTrainer
 
 bot = telebot.AsyncTeleBot("<TOKEN>")
 
-Oreo = ChatBot('GrilletBot')
-Oreo.set_trainer(ListTrainer)
+GrilletBot = ChatBot('GrilletBot')
+GrilletBot.set_trainer(ListTrainer)
 
 #Este for hace que el bot entrene las conversaciones en texto plano que estan dentro de la carpeta Data
 #que esta en la misma ruta que este archivo
 for archivo in os.listdir('Data'):
 	chats = open('Data/' + archivo, 'r').readlines()
-	Oreo.train(chats)
+	GrilletBot.train(chats)
 #Respuesta al los comandos /help y /start
 @bot.message_handler(commands=["help", "start"])
 def enviar_saludo(message):
@@ -29,10 +29,11 @@ def responder_mensaje(message):
 	destinatario  = message.chat.id
 	username      = message.chat.username
 	fechaMensaje  = message.date
-	respuesta     = str(Oreo.get_response(mensaje))
+	respuesta     = str(GrilletBot.get_response(mensaje))
 	if message.chat.type == "private":
 		bot.send_message(destinatario, respuesta)
-		#Esto permite ver en la consola lo que cualquier usuario le escribe a GrilletBot y lo que el responde
+		#Descomentar esto permite ver en la consola lo que cualquier usuario le escribe a GrilletBot 
+		#mostrando la fecha y el username de quien le envio el mensaje
 		#print(str(time.strftime("%D %H:%M", time.localtime(fechaMensaje))) + " " + username + ": " + mensaje)
 		#print("\t\t\t " + str(respuesta))
 	else:
