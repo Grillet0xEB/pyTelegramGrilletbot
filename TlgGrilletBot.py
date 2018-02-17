@@ -32,6 +32,7 @@ def responder_mensaje(message):
 	respuesta     = str(Oreo.get_response(mensaje))
 	if message.chat.type == "private":
 		bot.send_message(destinatario, respuesta)
+		#Esto permite ver en la consola lo que cualquier usuario le escribe a GrilletBot y lo que el responde
 		#print(str(time.strftime("%D %H:%M", time.localtime(fechaMensaje))) + " " + username + ": " + mensaje)
 		#print("\t\t\t " + str(respuesta))
 	else:
