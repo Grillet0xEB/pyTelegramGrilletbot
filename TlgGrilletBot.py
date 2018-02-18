@@ -53,7 +53,7 @@ def responder_mensaje(message):
 @bot.message_handler(content_types=['voice'])
 def responder_notaDeVoz(message):
 	destinatario  = message.chat.id
-	nota = open('Voz/nota.ogg', 'rb')
+	nota = open('Voz/voz.ogg', 'rb')
 	bot.send_chat_action(destinatario, 'record_audio')
 	bot.send_voice(destinatario, nota, 'Escuchame')
 
