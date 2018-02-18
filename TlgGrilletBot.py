@@ -1,47 +1,64 @@
 import os
 import time
+import random
 import telebot
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 
-bot = telebot.AsyncTeleBot("<TOKEN>")
+bot = telebot.AsyncTeleBot(<TOKEN>)
 
-GrilletBot = ChatBot('GrilletBot')
-GrilletBot.set_trainer(ListTrainer)
+grilletBot = ChatBot('grilletBot')
+grilletBot.set_trainer(ListTrainer)
+	
+for archivo in os.listdir('Conversaciones'):
+	chats = open('Conversaciones/' + archivo, 'r').readlines()
+	grilletBot.train(chats)
 
-#Este for hace que el bot entrene las conversaciones en texto plano que estan dentro de la carpeta Data
-#que esta en la misma ruta que este archivo
-for archivo in os.listdir('Data'):
-	chats = open('Data/' + archivo, 'r').readlines()
-	GrilletBot.train(chats)
-#Respuesta al los comandos /help y /start
 @bot.message_handler(commands=["help", "start"])
 def enviar_saludo(message):
-	mensaje       = message.text
-	destinatario  = message.chat.id
+	mensaje 		= message.text
+	destinatario	= message.chat.id
 	bot.reply_to(message, "Estoy listo!")
 	bot.send_message(destinatario, "Hola, soy GrilletBot")
-	
-#respuesta que en la que ChatterBot interactua
+
+@bot.message_handler(commands=["sendpicture"])
+def enviar_nudes(message):
+	mensaje 		= message.text
+	destinatario 	= message.chat.id
+	username 		= message.chat.username
+	fechaMensaje 	= message.date
+	numero = random.randint(1, len(os.listdir('Imagenes')))
+	contador = 1
+	for archivo in os.listdir('Imagenes'):
+		if contador == numero:
+			foto = open('Imagenes/' + archivo, 'rb')
+			bot.send_chat_action(destinatario, 'upload_photo')
+			bot.send_photo(destinatario, foto)
+			break
+		contador += 1
+
 @bot.message_handler(func=lambda message:True)
 def responder_mensaje(message):
-	mensaje       = message.text
-	destinatario  = message.chat.id
-	username      = message.chat.username
-	fechaMensaje  = message.date
-	respuesta     = str(GrilletBot.get_response(mensaje))
+	mensaje 		= message.text
+	destinatario 	= message.chat.id
+	username 		= message.chat.username
+	fechaMensaje 	= message.date
+	respuesta 		= str(Oreo.get_response(mensaje))
 	if message.chat.type == "private":
+		bot.send_chat_action(destinatario, 'typing')
 		bot.send_message(destinatario, respuesta)
-		#Descomentar esto permite ver en la consola lo que cualquier usuario le escribe a GrilletBot 
-		#mostrando la fecha y el username de quien le envio el mensaje
-		#print(str(time.strftime("%D %H:%M", time.localtime(fechaMensaje))) + " " + username + ": " + mensaje)
-		#print("\t\t\t " + str(respuesta))
 	else:
 		bot.reply_to(message, respuesta)
-		
-#Respuesta a cualquier archivo multimedia que se le envie al bot
-@bot.message_handler(content_types=['document', 'photo' 'audio', 'video', 'voice', 'file'])
+
+@bot.message_handler(content_types=['voice'])
+def responder_notaDeVoz(message):
+	destinatario  = message.chat.id
+	nota = open('Voice/voz.ogg', 'rb')
+	bot.send_chat_action(destinatario, 'record_audio')
+	bot.send_voice(destinatario, nota, 'Escuchame')
+
+@bot.message_handler(content_types=['document', 'photo' 'audio', 'video', 'file'])
 def responder_multimedia(message):
-	bot.reply_to(message, "Que hago con esto?")
+	bot.reply_to(message, 'No se que hacer con esto')
 
 bot.polling()
