@@ -16,16 +16,16 @@ for archivo in os.listdir('Conversaciones'):
 
 @bot.message_handler(commands=["help", "start"])
 def enviar_saludo(message):
-	mensaje 		= message.text
+	mensaje 	= message.text
 	destinatario	= message.chat.id
 	bot.reply_to(message, "Estoy listo!")
 	bot.send_message(destinatario, "Hola, soy GrilletBot")
 
 @bot.message_handler(commands=["sendpicture"])
 def enviar_nudes(message):
-	mensaje 		= message.text
+	mensaje 	= message.text
 	destinatario 	= message.chat.id
-	username 		= message.chat.username
+	username 	= message.chat.username
 	fechaMensaje 	= message.date
 	numero = random.randint(1, len(os.listdir('Imagenes')))
 	contador = 1
@@ -39,11 +39,11 @@ def enviar_nudes(message):
 
 @bot.message_handler(func=lambda message:True)
 def responder_mensaje(message):
-	mensaje 		= message.text
+	mensaje 	= message.text
 	destinatario 	= message.chat.id
-	username 		= message.chat.username
+	username 	= message.chat.username
 	fechaMensaje 	= message.date
-	respuesta 		= str(Oreo.get_response(mensaje))
+	respuesta 	= str(Oreo.get_response(mensaje))
 	if message.chat.type == "private":
 		bot.send_chat_action(destinatario, 'typing')
 		bot.send_message(destinatario, respuesta)
